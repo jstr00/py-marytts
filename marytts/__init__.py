@@ -81,7 +81,7 @@ class MaryTTS(object):
         self._locale      = locale
         self._voice       = voice
 
-    def _generate(self, message):
+    def _generate(self, message, whisper_effect:bool = False):
         """Given a message in message,
            return a response in the appropriate
            format."""
@@ -91,7 +91,11 @@ class MaryTTS(object):
                       "LOCALE"      : self._locale,
                       "AUDIO"       : self.audio,
                       "VOICE"       : self._voice,
+                      "effect_Whisper_selected": "on" if whisper_effect else "off",
                       }
+        if whisper_effect:
+            raw_params["effect_Whisper_parameters"] = "amount%3A100.0%3B"
+
         params = urlencode(raw_params)
         headers = {}
 
@@ -140,7 +144,7 @@ class MaryTTS(object):
 
         return re.sub(u"^ \?", "", re.sub(u"^ ' \?", "'", mph))
 
-    def synth_wav(self, txt, fmt='txt'):
+    def synth_wav(self, txt, whisper_effect: bool = False, fmt='txt'):
 
         if fmt == 'txt':
             phonemes = self.g2p(txt)
@@ -156,7 +160,7 @@ class MaryTTS(object):
 
             self.input_type  = "PHONEMES"
             self.output_type = "AUDIO"
-            wav = self._generate(s)
+            wav = self._generate(s, whisper_effect=whisper_effect)
 
         except:
             logging.error("*** ERROR: unexpected error: %s " % sys.exc_info()[0])

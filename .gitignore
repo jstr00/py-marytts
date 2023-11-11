@@ -1,3 +1,4 @@
+.gitignore
 # use glob syntax.
 syntax: glob
 *.swp
@@ -20,7 +21,7 @@ tmp
 old
 README.html
 README
-README.md
+output.wav
 README.xml
 build
 dist
